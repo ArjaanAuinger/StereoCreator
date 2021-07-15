@@ -44,8 +44,10 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     tooltipWindow.setMillisecondsBeforeTipAppears(500);
     
     // loading image data
-    arrayImage4Ch = ImageCache::getFromMemory (arrayPng4Ch, arrayPng4ChSize);
-    arrayImage2Ch = ImageCache::getFromMemory (arrayPng2Ch, arrayPng2ChSize);
+    //arrayImage4Ch = ImageCache::getFromMemory (arrayPng4Ch, arrayPng4ChSize);
+    //arrayImage2Ch = ImageCache::getFromMemory (arrayPng2Ch, arrayPng2ChSize);
+    arrayImage4Ch = juce::ImageCache::getFromMemory(BinaryData::Background2CH_png, BinaryData::Background2CH_pngSize);
+    arrayImage2Ch = juce::ImageCache::getFromMemory(BinaryData::Background2CH_png, BinaryData::Background2CH_pngSize);
     
     bCardPath.loadPathFromData (bCardData, sizeof (bCardData));
     cardPath.loadPathFromData (cardData, sizeof (cardData));
@@ -303,11 +305,11 @@ void StereoCreatorAudioProcessorEditor::paint (juce::Graphics& g)
     }
     
     // background logo
-    aaLogoBgPath.applyTransform (aaLogoBgPath.getTransformToScaleToFit (0.50f * currWidth, 0.25f * currHeight,
-                                                                        0.58f * currWidth, 0.58f * currWidth, true, Justification::centred));
-    g.setColour (Colours::white.withAlpha(0.1f));
-    g.strokePath (aaLogoBgPath, PathStrokeType (0.1f));
-    g.fillPath (aaLogoBgPath);
+    //aaLogoBgPath.applyTransform (aaLogoBgPath.getTransformToScaleToFit (0.50f * currWidth, 0.25f * currHeight,
+    //                                                                    0.58f * currWidth, 0.58f * currWidth, true, Justification::centred));
+    //g.setColour (Colours::white.withAlpha(0.1f));
+    //g.strokePath (aaLogoBgPath, PathStrokeType (0.1f));
+    //g.fillPath (aaLogoBgPath);
 }
 
 void StereoCreatorAudioProcessorEditor::resized()
@@ -316,8 +318,8 @@ void StereoCreatorAudioProcessorEditor::resized()
     const int headerHeight = 60;
     const int footerHeight = 15;
     const int topMargin = 10;
-    const int rotarySliderHeight = 70;
-    const int rotarySliderWidth = 80;
+    const int rotarySliderHeight = 75;
+    const int rotarySliderWidth = 55;
     const int grpHeight = 20;
     const int comboBoxWidth = 140;
     const int comboBoxHeight = 20;
@@ -330,8 +332,8 @@ void StereoCreatorAudioProcessorEditor::resized()
     const float meterHeight = 150;
     const float meterSpacing = 2;
     const float abLayerButtonHeight = 28;
-    const float compGainHeight = 60;
-    const float compGainWidth = 60;
+    const float compGainHeight = 70;
+    const float compGainWidth = 55;
     
     const int vSpace = 5;
     const int hSpace = 10;
@@ -349,7 +351,7 @@ void StereoCreatorAudioProcessorEditor::resized()
     area.removeFromLeft (leftRightMargin);
     area.removeFromRight (leftRightMargin);
     Rectangle<int> headerArea = area.removeFromTop (headerHeight);
-    title.setBounds (headerArea);
+    //title.setBounds (headerArea);
     Rectangle<int> abButtonArea = headerArea.removeFromRight(3 * abLayerButtonHeight);
     abButtonArea.removeFromTop((headerArea.getHeight() / 2) - (abLayerButtonHeight / 2));
     abButtonArea.removeFromBottom((headerArea.getHeight() / 2) - (abLayerButtonHeight / 2));

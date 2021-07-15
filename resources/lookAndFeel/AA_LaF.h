@@ -75,6 +75,8 @@ public:
 
     Typeface::Ptr aaLight, aaRegular, aaMedium, terminator;
 
+    juce::Image Knob3D;
+
     //float sliderThumbDiameter = 14.0f;
     float sliderBarSize = 8.0f;
 
@@ -84,6 +86,8 @@ public:
         aaMedium = Typeface::createSystemTypefaceFor(BinaryFonts::NunitoSansRegular_ttf, BinaryFonts::NunitoSansRegular_ttfSize);
         aaRegular = Typeface::createSystemTypefaceFor(BinaryFonts::NunitoSansSemiBold_ttf, BinaryFonts::NunitoSansSemiBold_ttfSize);
         terminator = Typeface::createSystemTypefaceFor(BinaryFonts::terminator_ttf, BinaryFonts::terminator_ttfSize);
+
+        Knob3D = juce::ImageCache::getFromMemory(BinaryData::Knob3D_png, BinaryData::Knob3D_pngSize);
 
         setColour (Slider::rotarySliderFillColourId, Colours::black);
         setColour (Slider::thumbColourId, Colour (0xCCFFFFFF));
@@ -477,6 +481,35 @@ public:
     void drawRotarySliderDual (Graphics& g, int x, int y, int width, int height, float sliderPos,
                                float rotaryStartAngle, float rotaryEndAngle, Slider& slider, bool isDual)
     {
+        if (Knob3D.isValid())
+        {
+            const double rotation = (slider.getValue()
+                - slider.getMinimum())
+                / (slider.getMaximum()
+                    - slider.getMinimum());
+
+            const int frames = 20;
+            const int frameId = (int)ceil(rotation * ((double)frames - 1.0));
+            const float radius = juce::jmin(width / 1.0f, height / 1.0f);
+            const float centerX = x + width * 0.5f;
+            const float centerY = y + height * 0.5f;
+            const float rx = centerX - radius - 1.0f;
+            const float ry = centerY - radius;
+
+            int imgWidth = Knob3D.getWidth();
+            int imgHeight = Knob3D.getHeight() / frames;
+            g.drawImage(Knob3D, 0, 0, imgWidth, imgHeight, 0, frameId * imgHeight, imgWidth, imgHeight);
+        }
+        else
+        {
+            static const float textPpercent = 0.35f;
+            juce::Rectangle<float> text_bounds(1.0f + width * (1.0f - textPpercent) / 2.0f, 0.5f * height, width * textPpercent, 0.5f * height);
+
+            g.setColour(juce::Colours::cadetblue);
+
+            g.drawFittedText(juce::String("No Image"), text_bounds.getSmallestIntegerContainer(), juce::Justification::horizontallyCentred | juce::Justification::centred, 1);
+        }
+       /*
         bool isEnabled = slider.isEnabled();
         const float alpha = isEnabled ? 1.0f : 0.4f;
         const float radius = jmin (width / 2, height / 2);
@@ -543,7 +576,7 @@ public:
         p.applyTransform (AffineTransform::rotation (angle).translated (centreX, centreY));
         g.setColour (ClRotSliderArrow.withMultipliedAlpha(alpha));
         g.fillPath (p);
-
+        */
     }
 
 
