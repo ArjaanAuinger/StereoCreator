@@ -48,6 +48,9 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     //arrayImage2Ch = ImageCache::getFromMemory (arrayPng2Ch, arrayPng2ChSize);
     arrayImage4Ch = juce::ImageCache::getFromMemory(BinaryData::Background2CH_png, BinaryData::Background2CH_pngSize);
     arrayImage2Ch = juce::ImageCache::getFromMemory(BinaryData::Background2CH_png, BinaryData::Background2CH_pngSize);
+
+    arrayImageMetering = juce::ImageCache::getFromMemory(BinaryData::Metering_png, BinaryData::Metering_pngSize);
+
     
     bCardPath.loadPathFromData (bCardData, sizeof (bCardData));
     cardPath.loadPathFromData (cardData, sizeof (cardData));

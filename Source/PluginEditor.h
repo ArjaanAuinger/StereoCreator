@@ -106,6 +106,7 @@ private:
     Rectangle<float> arrayImageArea;
     
     Image arrayImage;
+    Image arrayImageMetering;
     
     LevelMeter inputMeter[4];
     LevelMeter outputMeter[2];
