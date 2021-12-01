@@ -21,6 +21,7 @@
 */
 
 #pragma once
+#include <JuceHeader.h>
 
 //==============================================================================
 /*
@@ -29,6 +30,7 @@ class LevelMeter : public Component
 {
 public:
 
+    //float levelMeterCoeff;
     Image arrayImageMetering = juce::ImageCache::getFromMemory(BinaryData::Metering_png, BinaryData::Metering_pngSize);
 
     LevelMeter()
@@ -41,6 +43,7 @@ public:
 
     void paint (Graphics& g) override
     {
+        
         auto bounds = getLocalBounds();
         float labelWidth = bounds.getWidth();
         float labelHeight = labelWidth;
@@ -50,37 +53,24 @@ public:
         g.setFont (labelHeight);
         g.drawText(labelText, labelBounds, Justification::centred);
         
-        float labelMargin = 6.0f;
-        bounds.removeFromBottom(labelMargin);
-        g.setColour(Colours::black);
-        g.drawRoundedRectangle(bounds.toFloat(), 4.0f, 2.0f);
+      
         
-        g.setColour(colour);
-        auto innerBounds = bounds.reduced(1).toFloat();
-        auto newHeight = innerBounds.getHeight() * (1.0f - normalizedMeterHeight);
-        g.fillRoundedRectangle(innerBounds.withTop(newHeight), 2.0f);
-
-
-
         if (arrayImageMetering.isValid())
         {
-            const double rotation = (slider.getValue()
-                - slider.getMinimum())
-                / (slider.getMaximum()
-                    - slider.getMinimum());
+            const int frames = 17;
+            //const int frameId = (((minDb - normalizedMeterHeight) / ((minDb * -1.0) / frames))*-1)-1;
+            //normalizedMeterHeight = 0.99;
+            const int frameId = frames * normalizedMeterHeight;
+            DBG(frameId);
 
-            const int frames = 20;
-            const int frameId = (int)ceil(rotation * ((double)frames - 1.0));
-            const float radius = juce::jmin(width / 1.0f, height / 1.0f);
-            const float centerX = x + width * 0.5f;
-            const float centerY = y + height * 0.5f;
-            const float rx = centerX - radius - 1.0f;
-            const float ry = centerY - radius;
 
             int imgWidth = arrayImageMetering.getWidth();
             int imgHeight = arrayImageMetering.getHeight() / frames;
-            g.drawImage(arrayImageMetering, 0, 0, imgWidth, imgHeight, 0, frameId * imgHeight, imgWidth, imgHeight);
+            g.drawImage(arrayImageMetering, 0, 0, imgWidth, bounds.getHeight(), 0, frameId * imgHeight+2, imgWidth, imgHeight);
         }
+
+        /*
+
         else
         {
             static const float textPpercent = 0.35f;
@@ -90,7 +80,7 @@ public:
 
             g.drawFittedText(juce::String("No Image"), text_bounds.getSmallestIntegerContainer(), juce::Justification::horizontallyCentred | juce::Justification::centred, 1);
         }
-
+        */
 
 
 
@@ -104,6 +94,7 @@ public:
     {
         float levelDb = Decibels::gainToDecibels(newLevel, minDb);
         normalizedMeterHeight = (minDb - levelDb) / minDb;
+        levelMeterCoeff = newLevel;
         repaint();
     }
     
@@ -119,6 +110,7 @@ public:
     }
     
 private:
+    float levelMeterCoeff = 0.0f;
     float normalizedMeterHeight = 0.0f;
     Colour colour;
     juce::String labelText = "";
