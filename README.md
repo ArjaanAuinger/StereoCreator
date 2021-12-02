@@ -1,5 +1,6 @@
 # StereoCreator
-Our open-source Stereo plug-in developed by [Simon](https://github.com/becksimon) and [AA](https://austrian.audio/).
+Open-source Stereo plug-in developed by [Simon](https://github.com/becksimon) and [AA](https://austrian.audio/). Redesign by Arjaan Auinger.
+THIS IS NOT THE OFFICIAL REPO FOR STEREO CREATOR!
 
 The StereoCreator allows you to create several different stereo set-ups with one or two OC818 microphones in dual output mode.
 Installers for as VST3, AAX and AU are available at [austrian.audio](https://austrian.audio/).
