@@ -128,6 +128,9 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     slPseudoStPattern.setColour(Slider::rotarySliderOutlineColourId, colours[2]);
     slPseudoStPattern.addListener(this);
     slPseudoStPattern.dirStripTop.setPatternPathsAndFactors(bCardPath, cardPath, bCardFact, cardFact);
+    slPseudoStPattern.dirStripTop.setBounds(-6, 0,67,15); // Fixing patterns overlaying knob
+    slPseudoStPattern.dirStripBottom.setBounds(-6, 50, 67, 15); // Fixing patterns overlaying knob
+    //slPseudoStPattern.dirStripTop.setCentreRelative(0.0f, 0.1f);
     slPseudoStPattern.dirStripBottom.setPatternPathsAndFactors(omniPath, hCardPath, omniFact, hCardFact);
     
     addAndMakeVisible(&slMidPattern);
@@ -320,14 +323,14 @@ void StereoCreatorAudioProcessorEditor::resized()
     const int leftRightMargin = 30;
     const int headerHeight = 60;
     const int footerHeight = 15;
-    const int topMargin = 10;
+    const int topMargin = 30;//orig. 10
     const int rotarySliderHeight = 75;
     const int rotarySliderWidth = 55;
     const int grpHeight = 20;
     const int comboBoxWidth = 140;
     const int comboBoxHeight = 20;
     const int toggleBtHeight = 20;
-    const int sideAreaWidth = comboBoxWidth;
+    const int sideAreaWidth = comboBoxWidth+40;
     const int arrayWidth = 160;
     const int linearSliderHeight = 40;
     const int dirVisHeight = 150;
@@ -437,21 +440,25 @@ void StereoCreatorAudioProcessorEditor::resized()
     // slider
     twoRotSlArea.removeFromTop(vSpace);
     threeRotSlArea.removeFromTop(vSpace);
+
     // used as reference sliders/labels for placing two sliders in the plugin
     slMidGain[0].setBounds(twoRotSlArea.removeFromLeft(rotarySliderWidth));
     twoRotSlArea.removeFromLeft(hSpace);
     slSideGain[0].setBounds(twoRotSlArea.removeFromLeft(rotarySliderWidth));
-    
+     
     // used as reference sliders for placing one or three sliders in the plugin
     slMidGain[1].setBounds(threeRotSlArea.removeFromLeft(rotarySliderWidth));
     threeRotSlArea.removeFromLeft(hSpace);
     slSideGain[1].setBounds(threeRotSlArea.removeFromLeft(rotarySliderWidth));
     threeRotSlArea.removeFromLeft(hSpace);
     slMidPattern.setBounds(threeRotSlArea.removeFromLeft(rotarySliderWidth));
+    slMidPattern.setBounds(350,250,75,75);
     
+    // pattern graphic
     slPseudoStPattern.setBounds(slSideGain[1].getBounds());
+    //slPseudoStPattern.setBounds(350,200,55,75); //Quick Fix
     slXyPattern.setBounds(slSideGain[1].getBounds());
-    
+   
     // directivity visualiser and meters
     Rectangle<int> dirVisArea (mainArea.removeFromTop(dirVisHeight));
     dirVisArea.removeFromLeft((threeSlWidth / 2) - dirVisHeight + hSpace);
@@ -468,6 +475,7 @@ void StereoCreatorAudioProcessorEditor::resized()
     
     slRotation.setBounds(slXyAngle.getBounds());
     grpRotation.setBounds(grpXyAngle.getBounds());
+    
 }
 
 void StereoCreatorAudioProcessorEditor::comboBoxChanged(ComboBox *cb)

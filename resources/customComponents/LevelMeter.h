@@ -30,7 +30,7 @@ class LevelMeter : public Component
 {
 public:
 
-    //float levelMeterCoeff;
+    float levelMeterDropRate = -0.1;
     Image arrayImageMetering = juce::ImageCache::getFromMemory(BinaryData::Metering_png, BinaryData::Metering_pngSize);
 
     LevelMeter()
@@ -60,7 +60,7 @@ public:
             const int frames = 17;
             //const int frameId = (((minDb - normalizedMeterHeight) / ((minDb * -1.0) / frames))*-1)-1;
             //normalizedMeterHeight = 0.99;
-            const int frameId = frames * normalizedMeterHeight;
+            const int frameId = frames * levelMeterCoeff;
             DBG(frameId);
 
 
@@ -94,7 +94,14 @@ public:
     {
         float levelDb = Decibels::gainToDecibels(newLevel, minDb);
         normalizedMeterHeight = (minDb - levelDb) / minDb;
-        levelMeterCoeff = newLevel;
+        if (normalizedMeterHeight > levelMeterCoeff)
+        {
+            levelMeterCoeff = normalizedMeterHeight;
+        }
+        else
+        {
+                levelMeterCoeff /= 1.2;
+        }
         repaint();
     }
     
