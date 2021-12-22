@@ -213,11 +213,14 @@ public:
         auto maxValue = getMaximum();
         auto minValue = getMinimum();
         auto currentValue = getValue();
+
+        //Sprite Offset Fix
+        const int offsetImage = 20;
         
         currentValue = (currentValue - minValue) / (maxValue - minValue);
         
         
-        lf.drawRotarySlider(g, sliderRect.getX(), sliderRect.getY(), sliderRect.getWidth(), sliderRect.getHeight(), currentValue, minRotaryAngle, maxRotaryAngle, *this);
+        lf.drawRotarySlider(g, sliderRect.getX(), sliderRect.getY(), sliderRect.getWidth(), sliderRect.getHeight() + offsetImage, currentValue, minRotaryAngle, maxRotaryAngle, *this);
         
         if (tooltipActive)
             tooltipValueBox->setVisible(true);

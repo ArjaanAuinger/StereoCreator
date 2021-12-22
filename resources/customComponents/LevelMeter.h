@@ -54,12 +54,10 @@ public:
         g.drawText(labelText, labelBounds, Justification::centred);
         
       
-        
+        //Actually drawing the meter by calculating which frame to load, set by levelMeterCoeff from the setLevel function/method
         if (arrayImageMetering.isValid())
         {
             const int frames = 17;
-            //const int frameId = (((minDb - normalizedMeterHeight) / ((minDb * -1.0) / frames))*-1)-1;
-            //normalizedMeterHeight = 0.99;
             const int frameId = frames * levelMeterCoeff;
             DBG(frameId);
 
@@ -70,6 +68,7 @@ public:
         }
 
         /*
+        Code if Image not found, not really needed.
 
         else
         {
@@ -92,6 +91,7 @@ public:
     
     void setLevel(float newLevel)
     {
+        //Calculating normalized metering like in the old version, but adding a slope for sexier falloff, which is set to 1.2 fixed.
         float levelDb = Decibels::gainToDecibels(newLevel, minDb);
         normalizedMeterHeight = (minDb - levelDb) / minDb;
         if (normalizedMeterHeight > levelMeterCoeff)

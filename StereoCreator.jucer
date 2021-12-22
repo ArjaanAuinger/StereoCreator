@@ -9,6 +9,10 @@
   <MAINGROUP id="SV2Who" name="StereoCreator">
     <GROUP id="{77860FC0-81C3-846F-AB1F-CA7D5644D620}" name="resources">
       <GROUP id="{9E59B66B-05CF-B0B1-C848-C07040949502}" name="images">
+        <FILE id="lKvpyN" name="Background4CH.png" compile="0" resource="1"
+              file="resources/images/Background4CH.png"/>
+        <FILE id="oYDfHb" name="LinearSliderKnob.png" compile="0" resource="1"
+              file="resources/images/LinearSliderKnob.png"/>
         <FILE id="JgNX3W" name="Metering.png" compile="0" resource="1" file="resources/images/Metering.png"
               xcodeResource="0"/>
         <FILE id="dGUYGn" name="Knob3D.png" compile="0" resource="1" file="resources/images/Knob3D.png"/>

@@ -76,6 +76,7 @@ public:
     Typeface::Ptr aaLight, aaRegular, aaMedium, terminator;
 
     juce::Image Knob3D;
+    juce::Image linearSliderKnob;
 
     //float sliderThumbDiameter = 14.0f;
     float sliderBarSize = 8.0f;
@@ -88,6 +89,7 @@ public:
         terminator = Typeface::createSystemTypefaceFor(BinaryFonts::terminator_ttf, BinaryFonts::terminator_ttfSize);
 
         Knob3D = juce::ImageCache::getFromMemory(BinaryData::Knob3D_png, BinaryData::Knob3D_pngSize);
+        linearSliderKnob = juce::ImageCache::getFromMemory(BinaryData::LinearSliderKnob_png, BinaryData::LinearSliderKnob_pngSize);
 
         setColour (Slider::rotarySliderFillColourId, Colours::black);
         setColour (Slider::thumbColourId, Colour (0xCCFFFFFF));
@@ -481,12 +483,12 @@ public:
     void drawRotarySliderDual (Graphics& g, int x, int y, int width, int height, float sliderPos,
                                float rotaryStartAngle, float rotaryEndAngle, Slider& slider, bool isDual)
     {
+        //New Sprite-Based Knobs. First check if the .png is valid, if not draw text, that it is missing.
+        //Calculate a few values regarding center, frame to represent current value. centerX/centerY, rx, ry not used currently.
+        //Some code was found on stackoverflow. Ready to be resized, just change targetImageSize. Currently not a public var however.
         if (Knob3D.isValid())
         {
-            const double rotation = (slider.getValue()
-                - slider.getMinimum())
-                / (slider.getMaximum()
-                    - slider.getMinimum());
+            const double rotation = (slider.getValue() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum());
 
             const int frames = 20;
             const int frameId = (int)ceil(rotation * ((double)frames - 1.0));
@@ -496,9 +498,14 @@ public:
             const float rx = centerX - radius - 1.0f;
             const float ry = centerY - radius;
 
+            //Width and height of the source .png have to be bigger than targetImageSize. Currently 60 by default
+            const int targetImageSize = 60;
+            const int centeringImageX = (width - targetImageSize) / 2;
+            const int centeringImageY = (height - targetImageSize) / 2;
+
             int imgWidth = Knob3D.getWidth();
             int imgHeight = Knob3D.getHeight() / frames;
-            g.drawImage(Knob3D, 0, 0, imgWidth, imgHeight, 0, frameId * imgHeight, imgWidth, imgHeight);
+            g.drawImage(Knob3D, centeringImageX, centeringImageY, targetImageSize, targetImageSize, 0, frameId * imgHeight, imgWidth, imgHeight);
         }
         else
         {
@@ -509,7 +516,7 @@ public:
 
             g.drawFittedText(juce::String("No Image"), text_bounds.getSmallestIntegerContainer(), juce::Justification::horizontallyCentred | juce::Justification::centred, 1);
         }
-       /*
+       /* LEGACY KNOB CODE (VECTOR BASED)
         bool isEnabled = slider.isEnabled();
         const float alpha = isEnabled ? 1.0f : 0.4f;
         const float radius = jmin (width / 2, height / 2);
@@ -655,6 +662,9 @@ public:
     {
         //        const Rectangle<float> a (x, y, diameter, diameter);
 
+        g.drawImage(linearSliderKnob, centreX - diameter/2, centreY - diameter/2, diameter, diameter, 0, 0, linearSliderKnob.getWidth(), linearSliderKnob.getHeight());
+
+        /*
         const float newDiameter = (diameter - outlineThickness);
         const float halfThickness = newDiameter * 0.5f;
 
@@ -669,6 +679,7 @@ public:
 
         g.setColour (ClRotSliderArrowShadow);
         g.drawEllipse (centreX + 1.0f - halfThickness, centreY + 1.0f - halfThickness, diameter - outlineThickness-1.0f, diameter - outlineThickness-1.0f, 1.4f);
+        */
     }
 
 
@@ -696,13 +707,13 @@ public:
         
         buttonArea.reduce(1.5f, 1.5f);
         
-        if (button.getButtonText() == "zero latency")
+        if (button.getButtonText() == "Zero Latency")
         {
             g.setColour(backgroundColour.withMultipliedAlpha(button.getToggleState() ? 1.0f : 0.4f));
             
             g.fillRoundedRectangle(buttonArea, 2.0f);
         }
-        else if (button.getButtonText() == "calculate")
+        else if (button.getButtonText() == "Calculate")
         {
             g.setColour(backgroundColour.withMultipliedAlpha(button.getToggleState() ? 1.0f : 0.4f));
             

@@ -145,6 +145,9 @@ void StereoCreatorAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     
     numInputs = getTotalNumInputChannels();
     
+    //Uncomment to simulate 4 inputs on interfaces, that support fewer Channels for testing
+    //numInputs = 4;
+    
     if (numInputs == 4 && stereoModeIdx->load() < eStereoMode::trueMsIdx)
     {
         params.getParameter("stereoMode")->setValueNotifyingHost(params.getParameter("stereoMode")->convertTo0to1((float) eStereoMode::trueMsIdx));

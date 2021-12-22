@@ -30,6 +30,7 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     : AudioProcessorEditor (&p), processor (p), valueTreeState(vts)
 {
     setSize (EDITOR_WIDTH, EDITOR_HEIGHT);
+    //setResizable(true, true);
     
     setLookAndFeel(&globalLaF);
     
@@ -46,7 +47,7 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     // loading image data
     //arrayImage4Ch = ImageCache::getFromMemory (arrayPng4Ch, arrayPng4ChSize);
     //arrayImage2Ch = ImageCache::getFromMemory (arrayPng2Ch, arrayPng2ChSize);
-    arrayImage4Ch = juce::ImageCache::getFromMemory(BinaryData::Background2CH_png, BinaryData::Background2CH_pngSize);
+    arrayImage4Ch = juce::ImageCache::getFromMemory(BinaryData::Background4CH_png, BinaryData::Background4CH_pngSize);
     arrayImage2Ch = juce::ImageCache::getFromMemory(BinaryData::Background2CH_png, BinaryData::Background2CH_pngSize);
 
     arrayImageMetering = juce::ImageCache::getFromMemory(BinaryData::Metering_png, BinaryData::Metering_pngSize);
@@ -128,9 +129,6 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     slPseudoStPattern.setColour(Slider::rotarySliderOutlineColourId, colours[2]);
     slPseudoStPattern.addListener(this);
     slPseudoStPattern.dirStripTop.setPatternPathsAndFactors(bCardPath, cardPath, bCardFact, cardFact);
-    slPseudoStPattern.dirStripTop.setBounds(-6, 0,67,15); // Fixing patterns overlaying knob
-    slPseudoStPattern.dirStripBottom.setBounds(-6, 50, 67, 15); // Fixing patterns overlaying knob
-    //slPseudoStPattern.dirStripTop.setCentreRelative(0.0f, 0.1f);
     slPseudoStPattern.dirStripBottom.setPatternPathsAndFactors(omniPath, hCardPath, omniFact, hCardFact);
     
     addAndMakeVisible(&slMidPattern);
@@ -184,7 +182,7 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     
     addAndMakeVisible(&tbCalcCompGain);
     tbAttCalcCompGain.reset(new ButtonAttachment (valueTreeState, "calcCompGain", tbCalcCompGain));
-    tbCalcCompGain.setButtonText("calculate");
+    tbCalcCompGain.setButtonText("Auto");
     tbCalcCompGain.addListener(this);
     tbCalcCompGain.setToggleState(false, NotificationType::dontSendNotification);
     
@@ -206,51 +204,51 @@ StereoCreatorAudioProcessorEditor::StereoCreatorAudioProcessorEditor (StereoCrea
     
     // group components and labels
     addAndMakeVisible(&grpStereoMode);
-    grpStereoMode.setText("setup");
+    grpStereoMode.setText("Setup");
     grpStereoMode.setTextLabelPosition (Justification::centredLeft);
     
     addAndMakeVisible(&grpMidGain[0]);
-    grpMidGain[0].setText("mid gain");
+    grpMidGain[0].setText("Mid Gain");
     grpMidGain[0].setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpMidGain[1]);
-    grpMidGain[1].setText("mid gain");
+    grpMidGain[1].setText("Mid Gain");
     grpMidGain[1].setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpSideGain[0]);
-    grpSideGain[0].setText("side gain");
+    grpSideGain[0].setText("Side Gain");
     grpSideGain[0].setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpSideGain[1]);
-    grpSideGain[1].setText("side gain");
+    grpSideGain[1].setText("Side Gain");
     grpSideGain[1].setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpPseudoStPattern);
-    grpPseudoStPattern.setText("pattern");
+    grpPseudoStPattern.setText("Pattern");
     grpPseudoStPattern.setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpMidPattern);
-    grpMidPattern.setText("mid pattern");
+    grpMidPattern.setText("Mid Pattern");
     grpMidPattern.setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpXyPattern);
-    grpXyPattern.setText("pattern");
+    grpXyPattern.setText("Pattern");
     grpXyPattern.setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpXyAngle);
-    grpXyAngle.setText("recording angle");
+    grpXyAngle.setText("Recording Angle");
     grpXyAngle.setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpRotation);
-    grpRotation.setText("rotation");
+    grpRotation.setText("Rotation");
     grpRotation.setTextLabelPosition(Justification::centred);
     
     addAndMakeVisible(&grpCompensationGain);
-    grpCompensationGain.setText("compensation gain");
+    grpCompensationGain.setText("Compensation Gain");
     grpCompensationGain.setTextLabelPosition (Justification::centredLeft);
 
     addAndMakeVisible(&grpInputMeters);
-    grpInputMeters.setText("input - output levels");
+    grpInputMeters.setText("Input - Output Levels");
     grpInputMeters.setTextLabelPosition(Justification::centredLeft);
     
     // directivity visualiser
@@ -305,7 +303,7 @@ void StereoCreatorAudioProcessorEditor::paint (juce::Graphics& g)
     else // four channel input
     {
         title.setLineBounds(false, 0, 33, 101);
-        g.drawImageWithin(arrayImage4Ch, 4, 8, arrayImage4Ch.getWidth() / 2, arrayImage4Ch.getHeight() / 2, RectanglePlacement::onlyReduceInSize);
+        g.drawImageWithin(arrayImage4Ch, 0, 0, arrayImage4Ch.getWidth() / 2, arrayImage4Ch.getHeight() / 2, RectanglePlacement::onlyReduceInSize);
         helpToolTip.setTooltip(helpText4Ch);
         
     }
@@ -324,13 +322,13 @@ void StereoCreatorAudioProcessorEditor::resized()
     const int headerHeight = 60;
     const int footerHeight = 15;
     const int topMargin = 30;//orig. 10
-    const int rotarySliderHeight = 75;
-    const int rotarySliderWidth = 55;
+    const int rotarySliderHeight = 70;// 75;
+    const int rotarySliderWidth = 80;// 55;
     const int grpHeight = 20;
-    const int comboBoxWidth = 140;
+    const int comboBoxWidth = 140;// 180;
     const int comboBoxHeight = 20;
     const int toggleBtHeight = 20;
-    const int sideAreaWidth = comboBoxWidth+40;
+    const int sideAreaWidth = comboBoxWidth;
     const int arrayWidth = 160;
     const int linearSliderHeight = 40;
     const int dirVisHeight = 150;
@@ -338,8 +336,8 @@ void StereoCreatorAudioProcessorEditor::resized()
     const float meterHeight = 150;
     const float meterSpacing = 2;
     const float abLayerButtonHeight = 28;
-    const float compGainHeight = 70;
-    const float compGainWidth = 55;
+    const float compGainHeight = 70;// 70;
+    const float compGainWidth = 60;//55;
     
     const int vSpace = 5;
     const int hSpace = 10;
@@ -452,11 +450,9 @@ void StereoCreatorAudioProcessorEditor::resized()
     slSideGain[1].setBounds(threeRotSlArea.removeFromLeft(rotarySliderWidth));
     threeRotSlArea.removeFromLeft(hSpace);
     slMidPattern.setBounds(threeRotSlArea.removeFromLeft(rotarySliderWidth));
-    slMidPattern.setBounds(350,250,75,75);
     
     // pattern graphic
     slPseudoStPattern.setBounds(slSideGain[1].getBounds());
-    //slPseudoStPattern.setBounds(350,200,55,75); //Quick Fix
     slXyPattern.setBounds(slSideGain[1].getBounds());
    
     // directivity visualiser and meters
