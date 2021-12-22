@@ -1,10 +1,11 @@
 # StereoCreator
-Our open-source Stereo plug-in developed by [Simon](https://github.com/becksimon) and [AA](https://austrian.audio/).
+Open-source Stereo plug-in developed by [Simon](https://github.com/becksimon) and [AA](https://austrian.audio/). Redesign by Arjaan Auinger.
+THIS IS NOT THE OFFICIAL REPO FOR STEREO CREATOR!
 
 The StereoCreator allows you to create several different stereo set-ups with one or two OC818 microphones in dual output mode.
 Installers for as VST3, AAX and AU are available at [austrian.audio](https://austrian.audio/).
 
-<img width="640" alt="4Ch_StereoCreator" src="https://user-images.githubusercontent.com/70842242/113834931-aafeb680-978b-11eb-9994-449ea329f510.png">
+<img width="640" alt="4Ch_StereoCreator" src="https://github.com/ArjaanAuinger/StereoCreator/blob/main/StereoCreatorGitHub.png?raw=true">
 
 ## Building StereoCreator
 StereoCreator is based on [JUCE](https://juce.com/). To build StereoCreator, get a recent version of JUCE and open StereoCreator.jucer in Projucer. Select an exporter of your choice (e.g. Visual Studio or Xcode) to create and open a project file in your IDE.
